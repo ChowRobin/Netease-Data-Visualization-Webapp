@@ -19,35 +19,41 @@ class Spider:
         self.driver = webdriver.PhantomJS()
 
     def crawl(self, username):
+        driver = self.driver
         username = parse.quote(username)
         userurl = 'https://music.163.com/#/search/m/?s=' + username + '&type=1002'
-        self.driver.get(userurl)
+        driver.get(userurl)
         sleep(2)
-        self.driver.switch_to_frame('contentFrame')
+        driver.switch_to_frame('contentFrame')
         soup = BeautifulSoup(driver.page_source, 'html.parser')
-        usertxt = soup.find('table', class_='m-table m-table-2 m-table-2-cover').find('tr').find('td').find('div').find('a').get('href')
+        userlist = soup.find('table', class_='m-table m-table-2 m-table-2-cover').find_all('tr')
+        usertxt = userlist[0].find('td').find('div').find('a').get('href')
+        for user_tr in userlist:
+            _name = user_tr.find('td').find('div').find('a').find('span').get('title')
+            if _name == username:
+                usertxt = user_tr.find('td').find('div').find('a').get('href')
+                break
         userid = re.findall(r'\d+', usertxt)[0]
         print('userid is ', userid)
         url = 'https://music.163.com/#/user/songs/rank?id=' + userid
         
         driver.get(url)
-        sleep(2)
+        sleep(1.5)
         driver.switch_to_frame('contentFrame')
-        # sleep(3)
+        sleep(1)
         data1 = driver.page_source
 
-        driver.get(url)
-        sleep(2)
         driver.find_element_by_id('songsall').click()
-        driver.switch_to_frame('contentFrame')
+        sleep(1)
         data2 = driver.page_source
 
         driver.close()
-        self.parse(data1, 'week')
-        self.parse(data2, 'all')
+        self.parse(data1, 'week_wordcloud')
+        self.parse(data2, 'all_wordcloud')
 
-    def parse(self, data, pre)
-        soup = BeautifulSoup( 'html.parser')
+    def parse(self, data, pre):
+        print('==>', pre)
+        soup = BeautifulSoup(data, 'html.parser')
         
         lis = soup.find('div', class_='m-record').find_all('li')
 
@@ -83,6 +89,9 @@ class Spider:
                 except:
                     singers[name] = 1
 
+        filename = pre + '_singers.png'
+        self.save_wordcloud(singers, filename)
+
     def save_wordcloud(self, dic, filename):
         wc = WordCloud(background_color='white', 
                         font_path="./static/font/simsun.ttf")
@@ -91,4 +100,9 @@ class Spider:
         plt.axis("off")
         # plt.show()
         filename = './static/img/' + filename
-        Plt.savefig(filename)
+        plt.savefig(filename)
+
+if __name__ == '__main__':
+    spider = Spider()
+    username = input('please input your username\n> ')
+    spider.crawl(username)

@@ -1,3 +1,6 @@
 *.ttf
 venv
 .vscode
+*.log
+*.png
+*.jpg
