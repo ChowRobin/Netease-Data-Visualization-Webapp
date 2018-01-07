@@ -1,13 +1,17 @@
-from flask import Flask, url_for
+from flask import Flask, url_for, render_template
+from spider import Spider
 app = Flask(__name__)
 
 @app.route('/index')
-def login():
-    pass
+def index():
+    return render_template('index.html')
 
 @app.route('/search/<username>')
 def search(username):
-    pass
+    print(username)
+    spider = Spider()
+    spider.crawl(username)
+    return render_template('detail.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

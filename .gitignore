@@ -3,4 +3,5 @@ venv
 .vscode
 *.log
 *.png
+*.jpeg
 *.jpg
