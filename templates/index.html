@@ -13,12 +13,15 @@
        <div class="jumbotron">
             <h1 style="width:50%;margin:auto">关于音乐 你需要了解更多</h1>
        </div>
-        <div class="input-group input-group-lg" style="width:50%;margin:auto">
-                <input id="name_input" type="text" class="form-control" placeholder="输入网易云音乐用户名" aria-describedby="sizing-addon1">
-                <span class="input-group-addon" id="basic-addon2" onclick="search()">生成可视化数据</span>
-              </div>
-            <!-- <img src="/static/img/logo2.png" style="display:inline-block" />             -->
-              
+        
+        <div class="col-lg-6" style="width:100%">
+            <div class="input-group" style="width:50%;margin:auto">
+                <input type="text" id="name_input" class="form-control" placeholder="输入网易云音乐用户名">
+                <span class="input-group-btn">
+                <button class="btn btn-default" type="button" onclick="search()">Go!</button>
+                </span>
+            </div><!-- /input-group -->
+        </div><!-- /.col-lg-6 -->
         <footer class="hidden-xs">
             <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
                 <small>
